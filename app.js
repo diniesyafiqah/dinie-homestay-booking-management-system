@@ -1,3 +1,5 @@
+const CREATE_BOOKING_URL = "https://mwekjjgrllkqnvesdcvt.supabase.co/functions/v1/create-booking";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im13ZWtqamdybGxrcW52ZXNkY3Z0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyNDU4NzIsImV4cCI6MjA4ODgyMTg3Mn0.AlHmv252NwDbf14AfB2LZ_g9ez4IHy37ZkSfBxpgy0k";
 const RATE_PER_NIGHT = 300;
 const FLAT_DEPOSIT = 100;
 const WHATSAPP_LINK = "https://wasap.my/6014-3388944/DiniesHomestay";
@@ -461,9 +463,9 @@ function initPaymentPage() {
     }
   });
 
-  form.addEventListener("submit", (event) => {
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    const option = new FormData(form).get("paymentOption") || "deposit";
+    const option = (new FormData(form).get("paymentOption") || "deposit").toString();
 
     if (!receiptInput.files.length) {
       alertBox.textContent = "Sila muat naik resit pembayaran terlebih dahulu.";
@@ -472,45 +474,67 @@ function initPaymentPage() {
     }
 
     const { payNow, balance } = computeValues(option);
-    const booking = {
-      code: createBookingCode(),
-      name: draft.fullName,
-      phone: draft.phoneNumber,
+    const payload = {
+      fullName: draft.fullName,
+      phoneNumber: draft.phoneNumber,
       checkIn: draft.checkIn,
       checkOut: draft.checkOut,
       nights: draft.nights,
-      total: draft.total,
-      payNow,
-      balance,
-      paymentOption: option,
-      status: "Payment Review",
-      initialReceiptName: receiptInput.files[0].name,
-      balanceReceiptSubmitted: option === "full",
       guestCount: draft.guestCount,
       adultCount: draft.adultCount,
       childCount: draft.childCount,
       vehicleCount: draft.vehicleCount,
       stayPurpose: draft.stayPurpose,
-      createdAt: new Date().toISOString(),
+      total: draft.total,
+      payNow,
+      balance,
+      paymentOption: option,
     };
 
-    const bookings = loadBookings();
-    bookings.push(booking);
-    saveBookings(bookings);
+    const submitButton = form.querySelector("[type='submit']");
+    submitButton?.setAttribute("disabled", "true");
+    submitButton?.classList.add("is-loading");
+    alertBox?.classList.add("hidden");
 
-    storeLastBooking({
-      code: booking.code,
-      name: booking.name,
-      paymentOption: booking.paymentOption,
-      balance: booking.balance,
-      total: booking.total,
-      nights: booking.nights,
-      checkIn: booking.checkIn,
-      checkOut: booking.checkOut,
-    });
+    try {
+      const response = await fetch(CREATE_BOOKING_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify(payload),
+      });
 
-    clearDraft();
-    window.location.href = "confirmation.html";
+      if (!response.ok) {
+        throw new Error(`Server error ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      storeLastBooking({
+        code: data.code,
+        name: draft.fullName,
+        paymentOption: option,
+        balance,
+        total: draft.total,
+        nights: draft.nights,
+        checkIn: draft.checkIn,
+        checkOut: draft.checkOut,
+        payNow,
+      });
+
+      clearDraft();
+      window.location.href = "confirmation.html";
+    } catch (error) {
+      alertBox.textContent = "Tidak dapat hantar tempahan. Sila cuba lagi.";
+      alertBox.classList.remove("hidden");
+      console.error(error);
+    } finally {
+      submitButton?.removeAttribute("disabled");
+      submitButton?.classList.remove("is-loading");
+    }
   });
 
   updateBreakdown("deposit");
