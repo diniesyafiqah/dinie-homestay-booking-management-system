@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Seri Damai · Payment</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body data-page="payment">
+    <header class="step-header">
+      <a class="back-link" href="booking.html">← Kembali ke borang</a>
+      <div class="steps badge hero-badge steps-badge">
+        <span class="badge-link">1 · Maklumat Tetamu</span>
+        <span class="badge-link active-step">2 · Pembayaran</span>
+        <span class="badge-link">3 · Pengesahan</span>
+      </div>
+    </header>
+
+    <main class="form-shell">
+      <section class="summary-card" id="bookingSummary">
+        <h2>Booking summary</h2>
+        <p class="muted">Maklumat tempahan terkini akan dipaparkan di sini.</p>
+      </section>
+
+      <section class="form-card">
+        <h1>Payment options</h1>
+        <p class="muted">Pilih deposit tetap RM100 atau bayar penuh secara manual. Muat naik resit sebagai bukti.</p>
+
+        <form id="paymentForm">
+          <div class="payment-options">
+            <label class="option-tile" id="optionDeposit">
+              <input type="radio" name="paymentOption" value="deposit" checked />
+              <div>
+                <strong>Pay deposit (RM100)</strong>
+                <p class="muted">Baki perlu dijelaskan sebelum check-in. Resit wajib dimuat naik.</p>
+              </div>
+            </label>
+
+            <label class="option-tile" id="optionFull">
+              <input type="radio" name="paymentOption" value="full" />
+              <div>
+                <strong>Pay full amount</strong>
+                <p class="muted">Tiada baki semasa check-in. Resit wajib dimuat naik.</p>
+              </div>
+            </label>
+          </div>
+
+          <div class="payment-breakdown">
+            <div><span>Bayar sekarang:</span><strong id="payNowAmount">RM 0.00</strong></div>
+            <div><span>Baki:</span><strong id="balanceAmount">RM 0.00</strong></div>
+          </div>
+
+          <div class="qr-box">
+            <div class="bank-info">
+              <strong>Maklumat akaun (manual transfer)</strong>
+              <span>Bank: Maybank</span>
+              <span>No Akaun: 1122 2218 9173</span>
+              <span>Nama: Mazliana Mahmud</span>
+            </div>
+            <img src="pict10.jpg" alt="Kod QR pembayaran Maybank" />
+            <small class="muted">Imbas QR atau masukkan no akaun secara manual.</small>
+          </div>
+
+          <div>
+            <label for="paymentReceipt">Muat naik resit pembayaran</label>
+            <input id="paymentReceipt" type="file" accept="image/*,.pdf" required />
+          </div>
+
+          <div id="paymentAlert" class="form-alert warn hidden"></div>
+
+          <button type="submit" class="btn primary full">Confirm payment</button>
+        </form>
+      </section>
+    </main>
+
+    <footer>Langkah 2/3 · Pastikan resit jelas sebelum hantar.</footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
