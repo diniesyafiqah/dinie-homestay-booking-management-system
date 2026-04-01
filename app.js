@@ -128,7 +128,19 @@ function formatDateTime(dateValue) {
 
 function sanitizePhoneNumber(value) {
   if (!value) return "";
-  return value.replace(/[^+\d]/g, "");
+  // Remove all non-digit characters except +
+  let cleaned = value.replace(/[^\d+]/g, "");
+  // Remove the + if present
+  cleaned = cleaned.replace(/\+/g, "");
+  // If starts with 0 (Malaysia), convert to 60
+  if (cleaned.startsWith("0")) {
+    cleaned = "60" + cleaned.slice(1);
+  }
+  // If doesn't start with 60 or +, assume it's missing country code and add 60
+  if (!cleaned.startsWith("60")) {
+    cleaned = "60" + cleaned;
+  }
+  return cleaned;
 }
 
 function createBookingCode() {
