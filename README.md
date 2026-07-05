@@ -67,19 +67,19 @@ Development Tools
 
 # 2. Booking Page
 
-![Booking](README-images/booking.png)
+![Booking](images/booking.png)
 
 # 3. Payment Page
 
-![Payment](README-images/payment.png)
+![Payment](images/payment.png)
 
 # 4. Confirmation Page
 
-![Confirmation](README-images/confirmation.png)
+![Confirmation]images/confirmation.png)
 
 # 5. Admin Page
 
-![Admin](README-images/admin.png)
+![Admin](images/admin.png)
 
 # Future Improvements
 
