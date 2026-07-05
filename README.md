@@ -63,7 +63,7 @@ Development Tools
 
 # 1.Home Page
 
-![Home](README-images/home.png)
+![Home](images/home.png)
 
 # 2. Booking Page
 
