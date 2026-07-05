@@ -75,7 +75,7 @@ Development Tools
 
 # 4. Confirmation Page
 
-![Confirmation]images/confirmation.png)
+![Confirmation](images/confirmation.png)
 
 # 5. Admin Page
 
